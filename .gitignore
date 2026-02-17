@@ -1,0 +1,135 @@
+# Pasta Projeto (ignorar todos os documentos e subpastas)
+Projeto/
+Figuras/
+
+# Python Geral
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Ambiente Virtual (b3 ou outros venvs)
+b3/
+venv/
+ENV/
+env/
+.venv/
+
+# Dependências e Builds
+requirements.txt (se gerado automaticamente; adicione manualmente se versionado)
+*.egg-info
+dist/
+build/
+*.whl
+
+# Frontend (React/TypeScript/Vite/Node.js)
+node_modules/
+.npm
+.yarn-cache/
+yarn-error.log
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+dist/
+build/
+*.tsbuildinfo
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+*.docker
+Dockerfile.local
+volumes/
+*.log (para logs de containers, se aplicável)
+
+# Bancos de Dados e Caches
+postgres-data/
+redis-data/
+*.db
+*.sqlite3
+*.cache
+redis-dump.rdb
+
+# Arquivos Sensíveis e Configs
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+secrets/
+credentials/
+*.pem
+*.key
+*.crt
+
+# Logs e Temporários
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+~*
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Testes e Cobertura
+.pytest_cache/
+coverage/
+.htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# IDEs e Editores
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.project
+.cproject
+.settings/
+.netbeans/
+*.iml
+*.ipr
+*.iws
+*.code-workspace
+
+# Documentos Temporários (para pasta Projeto e arquivos Office)
+~$*.docx
+~$*.xlsx
+~$*.pptx
+*.tmp
+*.bak
+
+# Outros Gerais
+*.DS_Store
+.Apple*
+.Trash*
+*.prof
+*.fuse_hidden*
+.directory
+.npmrc
+.yarnrc
+*.pid
+*.seed
+*.pid.lock
+# Ignorar arquivos de build ou gerados
+target/
+out/
