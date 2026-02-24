@@ -1,0 +1,21 @@
+{
+  "pythonVersion": "3.12",
+  "pythonPlatform": "Darwin",
+  "venvPath": "/Volumes/Mac_XV/virtualenvs",
+  "venv": "b3",
+  "typeCheckingMode": "standard",
+  "reportUnknownMemberType": "none",
+  "reportUnknownVariableType": "none",
+  "reportUnknownArgumentType": "none",
+  "reportMissingTypeStubs": "none",
+  "reportAttributeAccessIssue": "none",
+  "reportReturnType": "error",
+  "reportIndexIssue": "warning",
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__",
+    "**/migrations",
+    ".venv/**",
+    "b3/**"
+  ]
+}
