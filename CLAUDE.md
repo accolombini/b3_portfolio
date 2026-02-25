@@ -100,6 +100,60 @@ docker-compose down             # Derruba tudo
 - **Branches:** main (produção) → develop → feature/*
 - **Ferramentas free** apenas — custo zero
 
+## Visão do Sistema — Pergunta Central
+"Meu portfólio está performando bem em relação ao mercado,
+e o que posso adicionar para melhorar?"
+
+### Módulo 1 — Análise Histórica
+Gráfico normalizado base 100 — todos no mesmo plano:
+- IBOVESPA (referência), 3 ativos atuais, índices adicionais
+  (SELIC, dólar, ouro — avaliar quais agregam clareza)
+- Período: 5 anos histórico real
+
+### Módulo 2 — Projeção 2 Anos
+- Modelos: ARIMA + Prophet + regressão polinomial com votação
+- Precisão calculada via backtest — exibida explicitamente
+- Gráfico: três linhas limpas Pessimista/Base/Otimista com probabilidade
+- ZERO nuvens de dispersão
+
+### Módulo 3 — Varredura Autônoma B3 (Scanning Service)
+- Varre todos os ativos da B3 de forma autônoma
+- Aplica: Alfa, Beta, Sharpe, Treynor, Sortino, R², VaR, CVaR,
+  P/E, P/B, EV/EBITDA, ROE, ROA, Margem Líquida, D/E, Liquidez
+- Identifica autonomamente os 3 melhores candidatos
+- Critério: maximizar desempenho do portfólio vs IBOVESPA
+
+### Módulo 4 — Otimização MPT/Markowitz (Portfolio Service)
+- Input: 3 ativos atuais + 3 novos = 6 ativos
+- Calcula alocação percentual ótima via fronteira eficiente
+- Objetivo: Sharpe máximo
+- Output: "X% ativo A, Y% ativo B, Z% ativo C..."
+
+## Makefile — Execução Modular (OBRIGATÓRIO)
+Cada módulo deve ter um target no Makefile. O usuário executa, analisa
+o output no terminal e decide se continua. Targets obrigatórios:
+  make analise-ibovespa    — busca histórico IBOVESPA e imprime resumo
+  make analise-retornos    — gera retornos_anuais.csv e imprime tabela
+  make analise-projecao    — roda projeção e imprime cenários
+  make pipeline-completa   — executa toda a sequência em ordem
+  make analise-status      — mostra o que já foi gerado
+Cada target: ativar workon b3, executar módulo, imprimir resultado,
+retornar exit code 0 se OK ou 1 se falhou.
+NUNCA encadear próxima etapa automaticamente — usuário decide quando avançar.
+
+## Metodologia de Projeção (DEFINITIVA)
+Abordagem: múltiplos modelos com votação
+- Modelos: ARIMA + Prophet + regressão polinomial
+- Cenário BASE: mediana ponderada onde os três convergem
+- Cenário OTIMISTA: limite superior do modelo mais otimista
+- Cenário PESSIMISTA: limite inferior do modelo mais conservador
+- Probabilidade de cada cenário: calculada — NÃO arbitrária, NÃO hardcoded
+Gráfico — formato OBRIGATÓRIO:
+- ZERO nuvens de dispersão
+- Três linhas nomeadas: Pessimista / Base / Otimista
+- Probabilidade explícita em cada label: "Base (58%)"
+- Conecta ao último ponto histórico real
+
 ## Disciplina de Sessões de Desenvolvimento
 - Cada sessão tem UM entregável verificável — nunca misturar dados + gráfico + projeção
 - Dados históricos devem ser validados com sanidade econômica ANTES de qualquer visualização
@@ -120,31 +174,28 @@ Prompts de sessão ficam em `.claude/commands/` e são executados digitando `/no
 ### Concluído
 ✅ Fase 1: documentação, arquitetura, requirements, README, estrutura de pastas
 ✅ Frontend configurado com Biome (zero vulnerabilidades)
-✅ services/analysis/ibovespa_analysis.py — versão inicial criada
-✅ Bug de double-scaling do CDI corrigido (linha 335)
-✅ Testes: 6/6 passando para TestAccumulateRateToIndex
+✅ services/analysis/ibovespa_analysis.py — criado e corrigido
+✅ Bug double-scaling CDI corrigido (linha 335)
+✅ Bug série 432 corrigido — SELIC % ao ano convertida para diária
+✅ Pylance zerado — 0 errors, 0 warnings, 0 informations
+✅ Testes: 9/9 passando (TDD aplicado)
+✅ 36 arquivos commitados e pushados para repositório remoto
+✅ Validação de sanidade: CDI 11.4% a.a., SELIC 11.5% a.a. ✅
 
-### Bug pendente — CORRIGIR ANTES DE QUALQUER OUTRA COISA
-🐛 _fetch_lft_2031 passa série BCB 432 (SELIC em % ao ANO, ex: 13.75)
-   para _accumulate_rate_to_index que espera % ao DIA — escala errada.
-   Correção: adicionar parâmetro rate_type na função.
-   Se rate_type="annual_pct": taxa_diaria = (1 + rate/100)^(1/252) - 1
-   Se rate_type="daily_pct": usar rate/100 diretamente (CDI série 12)
-   Arquivo: services/analysis/ibovespa_analysis.py
-
-### Próxima tarefa após correção do bug
-📋 Gerar tabela de retornos anuais validada (sem gráfico, sem projeção)
+### Próxima tarefa — AQUI AGORA
+📋 Sessão 02-A: tabela de retornos anuais validada
+   Comando: /sessao-02a-dados
    Entregável: services/analysis/outputs/retornos_anuais.csv
-   Critério de aprovação:
-   - CDI/SELIC: retorno anual entre 8% e 15% para 2021-2025
-   - IBOVESPA: retorno anual entre -20% e +40%
+   Critério: CDI/SELIC entre 8-15% a.a., IBOVESPA entre -20% e +40%
+   SEM gráfico, SEM projeção nesta sessão
 
 ### Sequência de desenvolvimento
-1. Corrigir bug série 432 — AQUI AGORA
-2. Gerar tabela retornos_anuais.csv validada
-3. Gráfico comparativo + projeção (só após validação da tabela)
-4. docker-compose.yml + infraestrutura
-5. Demais microservices e frontend
+1. ✅ Corrigir bugs série 432 e double-scaling
+2. ✅ Zerar Pylance
+3. Sessão 02-A: tabela retornos_anuais.csv validada ← AQUI AGORA
+4. Sessão 02-B: gráfico comparativo + projeção ARIMA
+5. docker-compose.yml + infraestrutura
+6. Demais microservices e frontend
 
 ## Fontes de Dados
 - **yfinance** — cotações históricas B3, IBOVESPA, fundos
